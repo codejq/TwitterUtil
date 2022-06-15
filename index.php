@@ -21,4 +21,3 @@ if (isset($_SESSION['oauth_token']) && $_SESSION['token'] !== $_REQUEST['oauth_t
     $twitterUtil->Authorize();
 }
 
-
