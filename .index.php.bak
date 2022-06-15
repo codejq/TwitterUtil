@@ -1,0 +1,51 @@
+<?php
+session_start();
+//add autoload note:do check your file paths in autoload.php
+require "./vendor/autoload.php";
+
+use Abraham\TwitterOAuth\TwitterOAuth;
+
+//this code will run when returned from twiter after authentication
+if (isset($_SESSION['oauth_token'])) {
+    $oauth_token = $_SESSION['oauth_token'];
+    unset($_SESSION['oauth_token']);
+    // everything looks good, request access token
+    //successful response returns oauth_token, oauth_token_secret, user_id, and screen_name
+    $consumer_key = 'FDKZFOtTCxr7PLmG9rlI2cvPZ';
+    $consumer_secret = 'z4HloN91Oi3XmKy2A5iPo2m5E1vqoyNK2zlvUKGhZgqRsnKCvD';
+    $connection = new TwitterOAuth($consumer_key, $consumer_secret);
+    $connection->setApiVersion('2');
+    //necessary to get access token other wise u will not have permision to get user info
+    $params = array("oauth_verifier" => $_GET['oauth_verifier'], "oauth_token" => $_GET['oauth_token']);
+    $access_token = $connection->oauth("oauth/access_token", $params);
+    //now again create new instance using updated return oauth_token and oauth_token_secret because old one expired if u dont u this u will also get token expired error
+    file_put_contents('./.' . $access_token['screen_name'].'.twitter', (string)serialize($access_token));
+    $connection = new TwitterOAuth($consumer_key, $consumer_secret,
+        $access_token['oauth_token'], $access_token['oauth_token_secret']);
+    $connection->setApiVersion('2');
+    //$content = $connection->get("account/verify_credentials");
+
+    $response = $connection->post('tweets', ['text' => 'Hello Twitter2 https://www.sabanew.net/story/ar/86981'], true);
+
+
+    echo "______________________________________";
+    print_r($connection);
+    print_r($statues);
+
+    print_r($content);
+    echo "x______________________________________";
+} else {
+
+    // main startup code
+    $consumer_key = 'FDKZFOtTCxr7PLmG9rlI2cvPZ';
+    $consumer_secret = 'z4HloN91Oi3XmKy2A5iPo2m5E1vqoyNK2zlvUKGhZgqRsnKCvD';
+    //this code will return your valid url which u can use in iframe src to popup or can directly view the page as its happening in this example
+    $connection = new TwitterOAuth($consumer_key, $consumer_secret);
+    $connection->setApiVersion('2');
+    $temporary_credentials = $connection->oauth('oauth/request_token', array("oauth_callback" => 'http://ubuntu:81/'));
+    $_SESSION['oauth_token'] = $temporary_credentials['oauth_token'];
+    $_SESSION['oauth_token_secret'] = $temporary_credentials['oauth_token_secret'];
+    $url = $connection->url("oauth/authorize", array("oauth_token" => $temporary_credentials['oauth_token']));
+// REDIRECTING TO THE URL
+    header('Location: ' . $url);
+}
