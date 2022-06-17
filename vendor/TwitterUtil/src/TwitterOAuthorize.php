@@ -4,11 +4,11 @@ namespace TwitterUtil;
 
 class TwitterOAuthorize extends \Abraham\TwitterOAuth\TwitterOAuth
 {
-    /** @var string  */
+    /** @var string */
     public $key;
-    /** @var string  */
+    /** @var string */
     public $secret;
-    /** @var string|null  */
+    /** @var string|null */
     public $callbackUrl;
 
 
@@ -18,16 +18,18 @@ class TwitterOAuthorize extends \Abraham\TwitterOAuth\TwitterOAuth
      * @param string|null $callbackUrl
      */
 
-    public function __CONSTRUCT(string $consumerKey = null,
-                                string $consumerSecret = null,
-                                ?string $callbackUrl= null) {
+    public function __CONSTRUCT(string  $consumerKey = null,
+                                string  $consumerSecret = null,
+                                ?string $callbackUrl = null)
+    {
         $this->key = $consumerKey;
         $this->secret = $consumerSecret;
         $this->callbackUrl = $callbackUrl;
         $this->init($consumerKey, $consumerSecret);
     }
-    public function init($consumerKey, $consumerSecret, ?string $oauthToken = null,?string $oauthTokenSecret = null,) {
-        parent::__construct($consumerKey, $consumerSecret, $oauthToken,$oauthTokenSecret);
+
+    public function init($consumerKey, $consumerSecret, ?string $oauthToken = null, ?string $oauthTokenSecret = null,) {
+        parent::__construct($consumerKey, $consumerSecret, $oauthToken, $oauthTokenSecret);
 
 
     }
@@ -56,7 +58,7 @@ class TwitterOAuthorize extends \Abraham\TwitterOAuth\TwitterOAuth
      * @return void
      * @throws \Abraham\TwitterOAuth\TwitterOAuthException
      */
-    public function StoreToken(): void
+    public function StoreToken(string $outputDir): void
     {
         $oauth_token = $_SESSION['oauth_token'];
         unset($_SESSION['oauth_token']);
@@ -69,8 +71,8 @@ class TwitterOAuthorize extends \Abraham\TwitterOAuth\TwitterOAuth
         $params = array("oauth_verifier" => $_GET['oauth_verifier'], "oauth_token" => $_GET['oauth_token']);
         $access_token = $this->oauth("oauth/access_token", $params);
         //now again create new instance using updated return oauth_token and oauth_token_secret because old one expired if u dont u this u will also get token expired error
-        file_put_contents('./.' . $access_token['screen_name'].'.twitter', (string)serialize($access_token));
-        $this->init($this->key , $this->secret,
+        file_put_contents($outputDir . '.' . $access_token['screen_name'] . '.twitter', (string)serialize($access_token));
+        /*$this->init($this->key , $this->secret,
             $access_token['oauth_token'], $access_token['oauth_token_secret']);
         $this->setApiVersion('2');
         //$content = $connection->get("account/verify_credentials");
@@ -80,7 +82,7 @@ class TwitterOAuthorize extends \Abraham\TwitterOAuth\TwitterOAuth
 
         echo "______________________________________";
         print_r($this);
-        echo "x______________________________________";
+        echo "x______________________________________";*/
 
     }
 
@@ -102,8 +104,8 @@ class TwitterOAuthorize extends \Abraham\TwitterOAuth\TwitterOAuth
         $params = array("oauth_verifier" => $_GET['oauth_verifier'], "oauth_token" => $_GET['oauth_token']);
         $access_token = $this->oauth("oauth/access_token", $params);
         //now again create new instance using updated return oauth_token and oauth_token_secret because old one expired if u dont u this u will also get token expired error
-        file_put_contents('./.' . $access_token['screen_name'].'.twitter', (string)serialize($access_token));
-        $this->init($this->key , $this->secret,
+        file_put_contents('./.' . $access_token['screen_name'] . '.twitter', (string)serialize($access_token));
+        $this->init($this->key, $this->secret,
             $access_token['oauth_token'], $access_token['oauth_token_secret']);
         $this->setApiVersion('2');
         //$content = $connection->get("account/verify_credentials");

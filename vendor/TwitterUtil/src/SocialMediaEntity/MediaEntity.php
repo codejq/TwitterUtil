@@ -29,24 +29,24 @@ abstract class MediaEntity
         $this->attachedImagePath = $attachedImagePath;
     }
 
-    public function getText($text)
+    public function getText()
     {
         return $this->text;
     }
 
-    public function getLink($Link)
+    public function getLink()
     {
         return $this->Link;
     }
 
-    public function getAttachedImagePath($attachedImagePath)
+    public function getAttachedImagePath()
     {
         return $this->attachedImagePath;
     }
 
 
 /*
- * // using the built in serizer is enough for the sitiwation
+ // using the built in serizer is enough for the sitiwation
     public function __serialize()
     {
         return [

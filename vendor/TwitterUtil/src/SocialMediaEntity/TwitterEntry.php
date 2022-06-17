@@ -4,4 +4,6 @@ namespace TwitterUtil\SocialMediaEntity;
 class TwitterEntry extends MediaEntity
 {
 
+
+
 }

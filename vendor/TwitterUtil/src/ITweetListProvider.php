@@ -4,5 +4,10 @@ namespace TwitterUtil;
 
 interface ITweetListProvider
 {
-    public function TweetList():array;
+    /**
+     * @return TwitterEntry\TwitterUtil\TwitterEntry[]
+     */
+    public function TweetList():iterable;
+    public function RemoveFromQuee($uniqId):void;
+
 }

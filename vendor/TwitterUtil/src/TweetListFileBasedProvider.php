@@ -2,6 +2,8 @@
 
 namespace TwitterUtil;
 
+use TwitterUtil\SocialMediaEntity\TwitterEntry;
+
 class TweetListFileBasedProvider implements ITweetListProvider
 {
     private string $filesPath;
@@ -9,18 +11,32 @@ class TweetListFileBasedProvider implements ITweetListProvider
 
     public function __construct($filesPath, $extention)
     {
-        $this->$filesPath = $filesPath;
-        $this->$extention = $extention;
+        $this->filesPath = $filesPath;
+        $this->extention = $extention;
 
     }
 
-    public function TweetList(): array
+    /**
+     * @return TwitterEntry[]
+     */
+    public function TweetList(): iterable
     {
-        $files = glob("{$this->$filesPath}*.{$this->$extention}}");
+        $files = glob("{$this->filesPath}{,.}*.{$this->extention}", GLOB_BRACE);
         $list = array();
         foreach ($files as $filename) {
-            $list[] = @unserialize(file_get_contents($filename));
+            $list[$filename] = @unserialize(file_get_contents($filename));
         }
         return $list;
     }
+
+
+    /**
+     * @return void
+     */
+    public function RemoveFromQuee($fileName): void
+    {
+        unlink($fileName);
+    }
+
+
 }
